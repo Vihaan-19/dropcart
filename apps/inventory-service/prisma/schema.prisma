@@ -1,0 +1,47 @@
+// Define Prisma schema for inventory service (Vendors, Products, Inventory, etc.)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Vendor {
+  id         String   @id @default(uuid())
+  userId     String   @unique // Link to the user ID from the auth service
+  storeName  String
+  contactInfo Json
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  products   Product[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  vendorId    String
+  name        String
+  price       Float
+  stockQty    Int
+  description String
+  category    String?
+  images      Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  vendor      Vendor   @relation(fields: [vendorId], references: [id])
+  inventoryLogs InventoryLog[]
+}
+
+model InventoryLog {
+  id        String   @id @default(uuid())
+  productId String
+  changeQty Int
+  reason    String
+  previousQty Int?
+  newQty    Int?
+  createdAt DateTime  @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  userId    String // Add userId to link to the user who made the change
+} 
