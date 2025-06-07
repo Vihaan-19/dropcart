@@ -1,8 +1,7 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { CreateVendorBody, UpdateMyStoreBody, Vendor, VendorList } from '../types/vendor.types';
 import { NotFoundError, ForbiddenError, ConflictError } from "../utils/errorHandlers"; // Import custom errors
-
-const prisma = new PrismaClient();
+import prisma from './prisma'; // Import the shared Prisma client
 
 /**
  * Get a list of all vendors with optional filtering and pagination.

@@ -61,23 +61,37 @@ const recentOrders = [
 
 export default function Home() {
   return (
-    <AppLayout navItems={navItems} title="Dashboard Overview">
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {stats.map((stat) => (
-          <StatCard
-            key={stat.label}
-            label={stat.label}
-            value={stat.value}
-            icon={stat.icon}
-            change={stat.change}
-            changeColor={stat.changeColor}
-            className={stat.cardClass}
-          />
-        ))}
-      </div>
-      {/* Recent Orders */}
-      <RecentOrders orders={recentOrders} />
+    <AppLayout navItems={navItems} title="Dashboard">
+      {/* Stat cards section - legacy DropCart style */}
+      <section className="mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat) => (
+            <StatCard
+              key={stat.label}
+              label={stat.label}
+              value={stat.value}
+              icon={stat.icon}
+              change={stat.change}
+              changeColor={stat.changeColor}
+              className={
+                // Emulate legacy DropCart card look
+                `flex flex-row items-center gap-4 p-6 rounded-2xl shadow border bg-white dark:bg-zinc-900 ${stat.cardClass}`
+              }
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Recent Orders section - legacy DropCart style */}
+      <section>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold tracking-tight">Recent Orders</h2>
+          <a href="/orders" className="text-sm text-primary font-medium hover:underline">View all</a>
+        </div>
+        <div className="rounded-2xl border bg-white dark:bg-zinc-900 shadow p-0">
+          <RecentOrders orders={recentOrders} />
+        </div>
+      </section>
     </AppLayout>
   );
 }

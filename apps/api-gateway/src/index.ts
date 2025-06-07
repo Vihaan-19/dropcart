@@ -10,13 +10,13 @@ import notificationsRoutes from './routes/notifications.routes'; // Import notif
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 
 // --- Health Check ---
 app.get('/', (_req: Request, res: Response) => {
-  res.send('API Gateway is running!');
+  res.send('API Gateway is running!').status(200);
 });
 
 // --- Routes ---
@@ -24,7 +24,7 @@ app.get('/', (_req: Request, res: Response) => {
 app.use('/auth', authRoutes);
 
 // Inventory service routes (protected by authentication middleware)
-app.use('/products', authenticate, inventoryRoutes);
+app.use('/inventory', authenticate, inventoryRoutes);
 
 // Orders and Payments service routes (protected by authentication middleware)
 app.use('/orders', authenticate, ordersRoutes); // Mount consolidated orders and payments routes
@@ -32,8 +32,6 @@ app.use('/orders', authenticate, ordersRoutes); // Mount consolidated orders and
 // Notifications service routes (protected by authentication middleware)
 app.use('/notifications', authenticate, notificationsRoutes); // Mount notifications routes
 
-// Add other services as needed
-// app.use('/orders', authenticate, orderRoutes);
 // app.use('/payments', authenticate, paymentsRoutes); // Removed for consolidation
 
 // --- Global Error Handler ---

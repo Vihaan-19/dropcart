@@ -42,7 +42,10 @@ export const authenticate: RequestHandler = (req: Request, res: Response, next: 
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
-        req.user = decoded.user;
+        
+        // Explicitly cast req to include the user property as a workaround
+        (req as Request & { user: JwtPayload['user'] }).user = decoded.user;
+        
         next();
     } catch (err) {
         console.error('Authentication middleware error:', err);
