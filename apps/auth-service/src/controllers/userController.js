@@ -8,67 +8,61 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMe = getMe;
 exports.updateProfile = updateProfile;
-const prisma_1 = __importDefault(require("../services/prisma"));
+const userService_1 = require("../services/userService"); // Import service functions
+const errorHandlers_1 = require("../utils/errorHandlers"); // Import error handler utility
 function getMe(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { user } = req;
-        if (!user) {
-            res.status(401).json({ error: 'Unauthorized' });
+        // Authentication middleware should handle this, but add a safeguard
+        if (!user || !user.userId) {
+            (0, errorHandlers_1.handleError)(res, 'Unauthorized', null, 401);
             return;
         }
         try {
-            const dbUser = yield prisma_1.default.user.findUnique({
-                where: { id: user.userId },
-                select: { id: true, name: true, email: true, role: true, createdAt: true, updatedAt: true },
-            });
-            if (!dbUser) {
-                res.status(404).json({ error: 'User not found' });
-                return;
-            }
+            // Use the service function to fetch the user
+            const dbUser = yield (0, userService_1.getUserById)(user.userId);
             res.json({ user: dbUser });
         }
         catch (err) {
-            res.status(500).json({ error: 'Failed to fetch user', details: err instanceof Error ? err.message : err });
+            // Use the error handler utility
+            (0, errorHandlers_1.handleError)(res, 'Failed to fetch user', err);
         }
     });
 }
 function updateProfile(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { user } = req;
-        if (!user) {
-            res.status(401).json({ error: 'Unauthorized' });
+        // Authentication middleware should handle this, but add a safeguard
+        if (!user || !user.userId) {
+            (0, errorHandlers_1.handleError)(res, 'Unauthorized', null, 401);
             return;
         }
-        // Assuming users_profile_body schema allows updating name and role
-        // Add more validation as needed based on the actual schema
-        const { name, role } = req.body;
-        if (!name && !role) {
-            res.status(400).json({ error: 'No update fields provided' });
+        // Validation middleware should have ensured basic validity, extract validated data
+        // Assuming validation.middleware.ts handles the allowed update fields (name, role)
+        const { name, role } = req.body; // Get potentially updated fields from validated body
+        // Build update data object, only include fields that are present in the request body
+        const updateData = {};
+        if (name !== undefined)
+            updateData.name = name;
+        if (role !== undefined)
+            updateData.role = role;
+        // Ensure at least one field is provided for update, although validation middleware might handle this
+        if (Object.keys(updateData).length === 0) {
+            (0, errorHandlers_1.handleError)(res, 'No update fields provided', null, 400);
             return;
         }
         try {
-            const updatedUser = yield prisma_1.default.user.update({
-                where: { id: user.userId },
-                data: Object.assign(Object.assign({}, (name && { name })), (role && { role })),
-                select: { id: true, name: true, email: true, role: true, createdAt: true, updatedAt: true },
-            });
+            // Use the service function to update the user
+            const updatedUser = yield (0, userService_1.updateUser)(user.userId, updateData);
             res.json({ user: updatedUser });
-            return;
         }
         catch (err) {
-            // Handle cases like user not found (PrismaClientKnownRequestError P2025)
-            if (err instanceof Error && err.code === 'P2025') {
-                res.status(404).json({ error: 'User not found' });
-                return;
-            }
-            res.status(500).json({ error: 'Failed to update user', details: err instanceof Error ? err.message : err });
-            return;
+            // Use the error handler utility
+            (0, errorHandlers_1.handleError)(res, 'Failed to update user', err);
         }
     });
 }
+// TODO: Add other controller functions for user management as needed 

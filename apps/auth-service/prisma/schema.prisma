@@ -1,7 +1,6 @@
-// Prisma schema for Auth + User Service
-
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/@prisma/client"
 }
 
 datasource db {
@@ -10,17 +9,17 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid())
+  id           String   @id @default(uuid())
   name         String
-  email        String    @unique
+  email        String   @unique
   passwordHash String
   role         Role
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 enum Role {
   ADMIN
   VENDOR
   CUSTOMER
-} 
+}

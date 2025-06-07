@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt, { SignOptions, Secret } from 'jsonwebtoken';
 import prisma from '../services/prisma';
+import { PublicUser } from '../types/user.types';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET is not defined');
 }
-
 
 const JWT_SECRET: Secret = process.env.JWT_SECRET || 'changeme';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
@@ -14,7 +14,6 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
 function generateToken(payload: object) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN as SignOptions['expiresIn'] });
 }
-
 
 function validateFields(fields: string[], body: Record<string, any>) {
   const missing = fields.filter(field => !body[field]);
@@ -37,7 +36,8 @@ export async function register(req: Request, res: Response, next: NextFunction):
   }
 
   const { name, email, password, role } = req.body;
-
+  console.log('Controller: Role received for Prisma operation:', role); // This log will now show the uppercased role
+  
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -54,7 +54,7 @@ export async function register(req: Request, res: Response, next: NextFunction):
     const token = generateToken({ userId: user.id, role: user.role });
 
     res.status(201).json({
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      user: { id: user.id, name: user.name, email: user.email, role: user.role } as PublicUser,
       token,
     });
     return;
@@ -83,7 +83,7 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
     const token = generateToken({ userId: user.id, role: user.role });
 
     res.json({
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      user: { id: user.id, name: user.name, email: user.email, role: user.role } as PublicUser,
       token,
     });
     return;

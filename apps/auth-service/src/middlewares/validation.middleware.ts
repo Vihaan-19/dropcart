@@ -17,9 +17,9 @@ export const registrationValidation: ValidationChain[] = [
   body('name').isString().notEmpty().withMessage('Name is required'),
   body('email').isEmail().withMessage('Valid email is required'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-  // Role validation: check if it's one of the allowed roles (e.g., 'customer', 'vendor', 'admin')
+  // Role validation: check if it's one of the allowed roles (e.g., 'CUSTOMER', 'VENDOR', 'ADMIN')
   // You might fetch allowed roles from a config or database if dynamic.
-  body('role').isIn(['customer', 'vendor', 'admin']).withMessage('Invalid user role'),
+  body('role').isIn(['CUSTOMER', 'VENDOR', 'ADMIN']).withMessage('Invalid user role')
 ];
 
 // Validation schema for user login (POST /auth/login)

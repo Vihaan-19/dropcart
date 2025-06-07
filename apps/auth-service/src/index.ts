@@ -1,14 +1,15 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import router from './routes';
-
 // Load environment variables
-dotenv.config();
-
+// dotenv.config();
+dotenv.config({ path: __dirname + '/../.env' });
 const app = express();
 app.use(express.json());
 
-app.get('/health', (req, res) => {
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
+
+app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'auth-service' });
 });
 

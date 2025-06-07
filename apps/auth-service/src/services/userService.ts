@@ -1,6 +1,7 @@
 import prisma from './prisma'; // Assuming prisma client is initialized and exported here
 import { NotFoundError, ConflictError, ValidationError } from "../utils/errorHandlers"; // Import custom errors
-import { User, Prisma } from "@prisma/client"; // Import User type and Prisma namespace
+import { PublicUser } from "../types/user.types";
+import { Prisma, PrismaClient } from "@prisma/client"; // Import only Prisma namespace
 
 /**
  * Get a user by their ID.
@@ -9,7 +10,7 @@ import { User, Prisma } from "@prisma/client"; // Import User type and Prisma na
  * @throws NotFoundError if the user is not found.
  * @throws Error for unexpected issues.
  */
-export const getUserById = async (userId: string): Promise<User> => {
+export const getUserById = async (userId: string): Promise<PublicUser> => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -41,7 +42,7 @@ export const getUserById = async (userId: string): Promise<User> => {
  * @throws ConflictError if there's a conflict (e.g., updating email to an existing one).
  * @throws Error for other unexpected issues.
  */
-export const updateUser = async (userId: string, updateData: any): Promise<User> => { // TODO: Define a proper type for updateData
+export const updateUser = async (userId: string, updateData: any): Promise<PublicUser> => { // TODO: Define a proper type for updateData
   try {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
