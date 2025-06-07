@@ -37,34 +37,8 @@
 
 ### System Architecture Diagram
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                          Frontend Layer                         │
-│                     (Next.js + TypeScript)                     │
-└─────────────────────────┬───────────────────────────────────────┘
-                          │
-┌─────────────────────────▼───────────────────────────────────────┐
-│                       API Gateway                               │
-│                   (Authentication Proxy)                        │
-└─────┬───────────┬───────────┬───────────┬─────────────────────┘
-      │           │           │           │
-┌─────▼─────┐ ┌──▼──────┐ ┌──▼──────┐ ┌──▼─────────────┐
-│Auth +     │ │Inventory│ │Order +  │ │Notification    │
-│User       │ │+ Vendor │ │Payment  │ │Service         │
-│Service    │ │Service  │ │Service  │ │                │
-└─────┬─────┘ └──┬──────┘ └──┬──────┘ └──┬─────────────┘
-      │          │           │           │
-┌─────▼─────┐ ┌──▼──────┐ ┌──▼──────┐    │
-│User DB    │ │Inventory│ │Order DB │    │
-│(PostgreSQL│ │DB       │ │(PostgreSQL  │
-│)          │ │(PostgreSQL│ │)        │    │
-└───────────┘ └─────────┘ └─────────┘    │
-                                         │
-┌────────────────────────────────────────▼┐
-│              RabbitMQ                   │
-│        (Message Queue System)           │
-└─────────────────────────────────────────┘
-```
+
+<img width="500" alt="Screenshot 2025-06-07 at 21 15 22" src="https://github.com/user-attachments/assets/121b47b4-234e-4b44-ab6f-d6aac20b4986" />
 
 ### Service Overview
 
