@@ -7,6 +7,6 @@ const router = Router();
 router.get('/:productId', getInventoryDetailsValidation, handleValidationErrors, getInventoryDetails);
 router.put('/:productId', updateProductStockValidation, handleValidationErrors, updateProductStock);
 
-router.get('/logs/:productId', getInventoryLogsValidation, handleValidationErrors, getInventoryLogs);
+router.get('/:productId/logs', getInventoryLogsValidation, handleValidationErrors, getInventoryLogs);
 
 export default router; 

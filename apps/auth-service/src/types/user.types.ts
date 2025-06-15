@@ -1,3 +1,13 @@
 import { User } from "@prisma/client";
 
-export type PublicUser = Omit<User, 'passwordHash'>; 
+export type UpdateProfileInput = {
+  name?: string;
+  role?: User['role'];
+};
+
+export type PublicUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: User['role'];
+}; 

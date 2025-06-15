@@ -1,9 +1,10 @@
+TODO: Fix all bloated services, create proper structure for each service
+TODO: Order Service
+TODO: Payment Gateway (Stripe/Razorpay) integration, in order service
+TODO: Notification Service
+TODO: Implement Message queues (rabbitMQ), as per System Architecture
+TODO: Dockerize all services
 TODO: Create documentation for each services
 TODO: Frontend
-TODO: Order Service
-TODO: Payment Gateway (Stripe/Razorpay) integration
-TODO: Dockerize all services
-TODO: Implement Message queues
-TODO: (if time) Rate limiting and request logging (Nginx)
 TODO: Deploy frontend
-TODO: Deploy all services and backend
+TODO: Deploy all services and api gateway

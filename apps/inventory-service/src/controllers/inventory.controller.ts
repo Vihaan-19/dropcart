@@ -75,7 +75,7 @@ export const updateProductStock = async (req: Request, res: Response, next: Next
 export const getInventoryLogs = async (req: Request, res: Response, next: NextFunction) => {
     // Validation results are handled by middleware
     try {
-        console.log('GET /inventory/logs/:productId', req.params.productId, req.query);
+        console.log('GET /inventory/:productId/logs', req.params.productId, req.query);
 
         // Extract userId and userRole from headers forwarded by API Gateway
         const userId = req.headers['x-user-id'] as string | undefined;

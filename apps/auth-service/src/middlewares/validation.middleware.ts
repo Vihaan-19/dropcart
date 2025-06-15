@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { body, validationResult, ValidationChain } from 'express-validator';
+import { AnyZodObject, ZodError } from 'zod';
+import { ValidationError } from '../utils/error';
 
 // Middleware to handle validation errors
 export const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
@@ -37,4 +39,27 @@ export const updateProfileValidation: ValidationChain[] = [
   // body('role').optional().isIn(['customer', 'vendor', 'admin']).withMessage('Invalid user role'),
 ];
 
-// Add other validation schemas for forgotten password, reset password, etc. as needed 
+// Add other validation schemas for forgotten password, reset password, etc. as needed
+
+export const validate = (schema: AnyZodObject) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await schema.parseAsync({
+        body: req.body,
+        query: req.query,
+        params: req.params,
+      });
+      next();
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const errors = error.errors.map((err) => ({
+          path: err.path.join('.'),
+          message: err.message,
+        }));
+        next(new ValidationError(JSON.stringify(errors)));
+      } else {
+        next(error);
+      }
+    }
+  };
+}; 
