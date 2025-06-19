@@ -1,4 +1,4 @@
-TODO: Fix all bloated services, create proper structure for each service
+TODO: Fix all services, create proper structure for each service
 TODO: Order Service
 TODO: Payment Gateway (Stripe/Razorpay) integration, in order service
 TODO: Notification Service
